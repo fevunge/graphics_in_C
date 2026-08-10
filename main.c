@@ -60,8 +60,8 @@ int main(int argc, char const *argv[]) {
       }     
     }
 
-    clear_buffer(framebuffer, 0xffffff);
-    put_pixel(framebuffer, frame % WIDTH, (HEIGHT / 2), 0x131020);
+    clear_buffer(framebuffer, 0x131020);
+    put_pixel(framebuffer, frame % WIDTH, (HEIGHT / 2), 0xffffff);
   
     SDL_UpdateTexture(
       texture,
