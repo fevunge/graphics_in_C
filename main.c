@@ -8,6 +8,9 @@ int main(int argc, char const *argv[]) {
   SDL_Texture *texture;
   SDL_Event event;
   uint8_t is_running = 1;
+  uint64_t start_time, end_time = 0;
+
+  const double fps = (1.0 / 60.0);
 
   if (!SDL_Init(SDL_INIT_VIDEO)){
     fprintf(stderr, "Error!: %s|\n", SDL_GetError());
@@ -42,10 +45,12 @@ int main(int argc, char const *argv[]) {
   
   SDL_SetTextureScaleMode(texture, SDL_SCALEMODE_NEAREST);
 
-
-  put_pixel(framebuffer, 0, 0, 0x00ff00);
+  int frame = 0;
 
   while (is_running) {
+
+    start_time = SDL_GetPerformanceCounter();
+
     while (SDL_PollEvent(&event)) {
       if (event.type == SDL_EVENT_QUIT) {
         is_running = 0;
@@ -55,16 +60,29 @@ int main(int argc, char const *argv[]) {
       }     
     }
 
+    clear_buffer(framebuffer, 0xffffff);
+    put_pixel(framebuffer, frame, (HEIGHT / 2), 0x131020);
+  
     SDL_UpdateTexture(
       texture,
       NULL,
       framebuffer, 
       sizeof(uint32_t) * WIDTH
     );
+
+    frame++;
     
     SDL_RenderClear(renderer);
     SDL_RenderTexture(renderer, texture, NULL, NULL);
     SDL_RenderPresent(renderer);
+
+    end_time = SDL_GetPerformanceCounter();
+
+    double elapsed = (double)(end_time - start_time) / (double) SDL_GetPerformanceFrequency();
+    if (elapsed < fps)
+    {
+      SDL_Delay((fps - elapsed) * (1000.0));
+    }
   }
   SDL_DestroyTexture(texture);
   SDL_DestroyRenderer(renderer);
