@@ -10,5 +10,6 @@
 #include <stdio.h>
 
 void put_pixel(uint32_t *, int , int , uint32_t);
+void clear_buffer(uint32_t *, uint32_t);
 
 #endif // !MAIN_H
