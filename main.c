@@ -24,16 +24,28 @@ int main(int argc, char const *argv[]) {
     while (SDL_PollEvent(&event)) {
       if (event.type == SDL_EVENT_QUIT) {
         is_running = 0;
+        printf("quited");
       }
       if (event.type == SDL_EVENT_KEY_UP) {
         is_running = !(event.key.key == SDLK_ESCAPE);
+        printf("escaped");
       }     
     }
+    SDL_UpdateTexture(
+      texture,
+      NULL,
+      framebuffer, 
+      sizeof(uint32_t) * WIDTH
+    );
     
     SDL_RenderClear(renderer);
+    SDL_RenderTexture(renderer, texture, NULL, NULL);
     SDL_RenderPresent(renderer);
   }
-  
-  printf("Hello, World with SDL!");
+  SDL_DestroyTexture(texture);
+  SDL_DestroyRenderer(renderer);
+  SDL_DestroyWindow(win);
+  SDL_Quit();
   return 0;
 }
+
